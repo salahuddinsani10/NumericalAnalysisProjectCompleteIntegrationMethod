@@ -14,7 +14,7 @@ import operator
 
 # Define all test functions with their metadata
 FUNCTIONS: Dict[str, Dict[str, Any]] = {
-    # Smooth functions
+    # ========== SMOOTH FUNCTIONS (Simpson's excels) ==========
     "smooth_sin": {
         "name": "sin(x)",
         "latex": r"\sin(x)",
@@ -22,6 +22,8 @@ FUNCTIONS: Dict[str, Dict[str, Any]] = {
         "func": lambda x: np.sin(x),
         "default_a": 0,
         "default_b": np.pi,
+        "best_method": "simpson",
+        "description": "Classic smooth periodic function",
     },
     "smooth_exp": {
         "name": "e^x",
@@ -30,9 +32,55 @@ FUNCTIONS: Dict[str, Dict[str, Any]] = {
         "func": lambda x: np.exp(x),
         "default_a": 0,
         "default_b": 1,
+        "best_method": "simpson",
+        "description": "Exponential growth - infinitely differentiable",
     },
     
-    # Mild Curvature functions
+    # ========== TRAPEZOIDAL BEST (Linear or near-linear) ==========
+    "trap_linear": {
+        "name": "2x + 1",
+        "latex": r"2x + 1",
+        "category": "Trapezoidal Best",
+        "func": lambda x: 2*x + 1,
+        "default_a": 0,
+        "default_b": 5,
+        "best_method": "trapezoidal",
+        "description": "Linear function - Trapezoidal is EXACT for linear functions!",
+    },
+    "trap_piecewise": {
+        "name": "|x - 1|",
+        "latex": r"|x - 1|",
+        "category": "Trapezoidal Best",
+        "func": lambda x: np.abs(x - 1),
+        "default_a": 0,
+        "default_b": 2,
+        "best_method": "trapezoidal",
+        "description": "Piecewise linear (V-shape) - Trapezoidal handles corners well",
+    },
+    
+    # ========== MIDPOINT BEST (Symmetric or special properties) ==========
+    "mid_quadratic": {
+        "name": "x² - 2x",
+        "latex": r"x^2 - 2x",
+        "category": "Midpoint Best",
+        "func": lambda x: x**2 - 2*x,
+        "default_a": 0,
+        "default_b": 3,
+        "best_method": "midpoint",
+        "description": "Quadratic - Midpoint has better error cancellation",
+    },
+    "mid_symmetric": {
+        "name": "x⁴ - x²",
+        "latex": r"x^4 - x^2",
+        "category": "Midpoint Best",
+        "func": lambda x: x**4 - x**2,
+        "default_a": -1,
+        "default_b": 1,
+        "best_method": "midpoint",
+        "description": "Symmetric function - errors cancel at midpoints",
+    },
+    
+    # ========== MILD CURVATURE ==========
     "mild_rational": {
         "name": "1/(1+x²)",
         "latex": r"\frac{1}{1+x^2}",
@@ -40,6 +88,8 @@ FUNCTIONS: Dict[str, Dict[str, Any]] = {
         "func": lambda x: 1 / (1 + x**2),
         "default_a": 0,
         "default_b": 1,
+        "best_method": "simpson",
+        "description": "Rational function with gentle curve",
     },
     "mild_sqrt": {
         "name": "√(1+x)",
@@ -48,9 +98,11 @@ FUNCTIONS: Dict[str, Dict[str, Any]] = {
         "func": lambda x: np.sqrt(1 + x),
         "default_a": 0,
         "default_b": 3,
+        "best_method": "simpson",
+        "description": "Square root - smooth but with decreasing derivative",
     },
     
-    # Turning Points functions
+    # ========== TURNING POINTS (Oscillating) ==========
     "turning_cubic": {
         "name": "x³ - 3x",
         "latex": r"x^3 - 3x",
@@ -58,6 +110,8 @@ FUNCTIONS: Dict[str, Dict[str, Any]] = {
         "func": lambda x: x**3 - 3*x,
         "default_a": -2,
         "default_b": 2,
+        "best_method": "simpson",
+        "description": "Cubic with local max and min",
     },
     "turning_cos5x": {
         "name": "cos(5x)",
@@ -66,6 +120,30 @@ FUNCTIONS: Dict[str, Dict[str, Any]] = {
         "func": lambda x: np.cos(5 * x),
         "default_a": 0,
         "default_b": np.pi,
+        "best_method": "simpson",
+        "description": "High frequency oscillation - needs more intervals",
+    },
+    
+    # ========== DISCONTINUITIES (Challenging cases) ==========
+    "disc_step": {
+        "name": "step(x-0.5)",
+        "latex": r"\text{step}(x - 0.5)",
+        "category": "Challenging",
+        "func": lambda x: np.where(x < 0.5, 0.0, 1.0),
+        "default_a": 0,
+        "default_b": 1,
+        "best_method": "midpoint",
+        "description": "Step function - all methods struggle with discontinuities",
+    },
+    "disc_sawtooth": {
+        "name": "x mod 0.5",
+        "latex": r"x \\mod 0.5",
+        "category": "Challenging",
+        "func": lambda x: np.mod(x, 0.5),
+        "default_a": 0,
+        "default_b": 2,
+        "best_method": "trapezoidal",
+        "description": "Sawtooth wave - periodic with sharp corners",
     },
 }
 
@@ -93,6 +171,8 @@ def list_functions() -> Dict[str, Dict[str, Any]]:
             "category": info["category"],
             "default_a": float(info["default_a"]),
             "default_b": float(info["default_b"]),
+            "best_method": info.get("best_method", "simpson"),
+            "description": info.get("description", ""),
         }
         for fid, info in FUNCTIONS.items()
     }

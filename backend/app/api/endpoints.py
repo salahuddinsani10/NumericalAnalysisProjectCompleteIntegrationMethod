@@ -84,6 +84,8 @@ async def get_functions():
                 category=info["category"],
                 default_a=info["default_a"],
                 default_b=info["default_b"],
+                best_method=info.get("best_method", "simpson"),
+                description=info.get("description", ""),
             )
             for fid, info in funcs.items()
         ]

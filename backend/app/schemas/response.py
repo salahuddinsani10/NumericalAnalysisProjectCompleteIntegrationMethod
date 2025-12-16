@@ -110,6 +110,8 @@ class FunctionInfo(BaseModel):
     category: str
     default_a: float
     default_b: float
+    best_method: Optional[str] = "simpson"
+    description: Optional[str] = ""
 
 
 class FunctionListResponse(BaseModel):

@@ -10,6 +10,7 @@ import FunctionPlot from './components/Visualizations/FunctionPlot';
 import ConvergencePlot from './components/Visualizations/ConvergencePlot';
 import ResultsTable from './components/Visualizations/ResultsTable';
 import Deliverables from './components/Deliverables/Deliverables';
+import { HelpOverlay, HelpButton } from './components/Help/HelpGuide';
 
 // API
 import { getFunctions, calculate, analyze } from './services/api';
@@ -25,6 +26,7 @@ function App() {
   const [selectedMethods, setSelectedMethods] = useState(['trapezoidal', 'midpoint', 'simpson']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   // Results
   const [calculateData, setCalculateData] = useState(null);
@@ -402,6 +404,10 @@ function App() {
           Numerical Analysis Dashboard • Comparing Simpson's, Trapezoidal, and Midpoint Integration Rules
         </p>
       </footer>
+
+      {/* Help System */}
+      <HelpButton onClick={() => setShowHelp(true)} />
+      {showHelp && <HelpOverlay onClose={() => setShowHelp(false)} />}
     </div>
   );
 }
