@@ -18,6 +18,7 @@ class Settings:
         "http://127.0.0.1:8000",
         # Production URLs
         "https://numerical-analysis-project-complete-three.vercel.app",
+        "https://numerical-analysis-project-complete-henna.vercel.app",
         "https://numericalanalysiscomparisian.onrender.com",
     ]
 
