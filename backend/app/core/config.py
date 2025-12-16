@@ -16,6 +16,9 @@ class Settings:
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5174",
         "http://127.0.0.1:8000",
+        # Production URLs
+        "https://numerical-analysis-project-complete-three.vercel.app",
+        "https://numericalanalysiscomparisian.onrender.com",
     ]
 
 settings = Settings()
