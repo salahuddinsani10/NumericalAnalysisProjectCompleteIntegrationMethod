@@ -341,10 +341,7 @@ export default function MathCalculator({ onExpressionChange, onSubmit, loading }
                             ].map((preset) => (
                                 <button
                                     key={preset.value}
-                                    onClick={() => {
-                                        setExpression(preset.value);
-                                        if (onExpressionChange) onExpressionChange(preset.value);
-                                    }}
+                                    onClick={() => insertText(preset.value)}
                                     className="px-4 py-2 rounded-xl bg-gradient-to-r from-slate-700 to-slate-600 border border-slate-500/30 text-slate-200 font-medium hover:from-slate-600 hover:to-slate-500 transition-all active:scale-95 shadow-lg"
                                     disabled={loading}
                                 >
