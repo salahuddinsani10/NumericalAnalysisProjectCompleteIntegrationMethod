@@ -86,6 +86,7 @@ class AnalyzeResponse(BaseModel):
     results: Dict[str, List[MethodResult]]
     winner: Optional[str] = None
     improvements: Dict[str, float] = {}
+    win_counts: Optional[Dict[str, int]] = None  # Win count per method across all N values
     
     class Config:
         json_schema_extra = {

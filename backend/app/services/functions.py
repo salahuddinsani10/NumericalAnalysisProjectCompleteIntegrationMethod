@@ -58,26 +58,26 @@ FUNCTIONS: Dict[str, Dict[str, Any]] = {
         "description": "Piecewise linear (V-shape) - Trapezoidal handles corners well",
     },
     
-    # ========== MIDPOINT BEST (Symmetric or special properties) ==========
-    "mid_quadratic": {
-        "name": "x² - 2x",
-        "latex": r"x^2 - 2x",
+    # ========== MIDPOINT BEST (Functions with singularities or unbounded derivatives) ==========
+    "mid_sqrt_singular": {
+        "name": "1/√x",
+        "latex": r"\frac{1}{\sqrt{x}}",
         "category": "Midpoint Best",
-        "func": lambda x: x**2 - 2*x,
+        "func": lambda x: 1 / np.sqrt(x) if x > 0 else 0,
         "default_a": 0,
-        "default_b": 3,
-        "best_method": "midpoint",
-        "description": "Quadratic - Midpoint has better error cancellation",
-    },
-    "mid_symmetric": {
-        "name": "x⁴ - x²",
-        "latex": r"x^4 - x^2",
-        "category": "Midpoint Best",
-        "func": lambda x: x**4 - x**2,
-        "default_a": -1,
         "default_b": 1,
         "best_method": "midpoint",
-        "description": "Symmetric function - errors cancel at midpoints",
+        "description": "Singularity at x=0 - Exact value is 2. Midpoint avoids endpoints.",
+    },
+    "mid_log_singular": {
+        "name": "ln(x)",
+        "latex": r"\ln(x)",
+        "category": "Midpoint Best",
+        "func": lambda x: np.log(x) if x > 0 else 0,
+        "default_a": 0,
+        "default_b": 1,
+        "best_method": "midpoint",
+        "description": "Logarithmic singularity at x=0 - Exact value is -1.",
     },
     
     # ========== MILD CURVATURE ==========

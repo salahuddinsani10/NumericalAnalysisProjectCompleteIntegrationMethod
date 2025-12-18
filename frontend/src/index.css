@@ -1,12 +1,16 @@
 @import "tailwindcss";
 
-/* Custom CSS Variables */
+/* Custom CSS Variables - Lighter Warm Color Theme */
 :root {
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.3);
+  --gradient-primary: linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #dc2626 100%);
+  --gradient-warm: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+  --gradient-dark: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.3);
+  --accent-orange: #f59e0b;
+  --accent-amber: #fbbf24;
+  --accent-rose: #fb7185;
 }
 
 /* Base Styles */
@@ -19,7 +23,7 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--gradient-dark);
   min-height: 100vh;
-  color: #e2e8f0;
+  color: #f1f5f9;
 }
 
 /* Glassmorphism Utilities */
@@ -31,14 +35,14 @@ body {
 }
 
 .glass-card {
-  background: rgba(30, 41, 59, 0.7);
+  background: rgba(51, 65, 85, 0.6);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-/* Gradient Text */
+/* Gradient Text - Original Purple */
 .gradient-text {
   background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
   -webkit-background-clip: text;
@@ -46,7 +50,15 @@ body {
   background-clip: text;
 }
 
-/* Custom Scrollbar */
+/* Gradient Text - Warm Colors */
+.gradient-text-warm {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b, #ea580c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom Scrollbar - Warm Colors */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -58,28 +70,59 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #7c8ff0, #8b5cb4);
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.5);
+  }
 }
 
 .animate-fade-in {
@@ -90,13 +133,18 @@ body {
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Slider Styles */
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Slider Styles - Warm Colors */
 input[type="range"] {
   -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 8px;
   border-radius: 4px;
-  background: linear-gradient(90deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.3), rgba(234, 88, 12, 0.3));
   outline: none;
 }
 
@@ -105,9 +153,9 @@ input[type="range"]::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
   transition: transform 0.2s ease;
 }
 
@@ -115,7 +163,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.15);
 }
 
-/* Button Styles */
+/* Button Styles - Original Purple */
 .btn-primary {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
@@ -131,6 +179,34 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+}
+
+/* Button Styles - Warm Colors */
+.btn-primary-warm {
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  color: white;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+}
+
+.btn-primary-warm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.5);
+}
+
+.btn-primary-warm:active {
+  transform: translateY(0);
+}
+
+.btn-primary-warm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .btn-primary:active {
@@ -156,8 +232,8 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .input-field:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
 }
 
 /* Select Styles */
@@ -174,8 +250,8 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .select-field:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
 }
 
 /* Method Cards */
@@ -188,14 +264,14 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 .method-card.active {
-  border-color: #667eea;
-  background: rgba(102, 126, 234, 0.1);
-  box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
 }
 
 .method-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(102, 126, 234, 0.5);
+  border-color: rgba(245, 158, 11, 0.5);
 }
 
 /* Chart Container */
@@ -211,9 +287,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
   font-size: 1.1em;
 }
 
-/* Winner Badge */
+/* Winner Badge - Warm Colors */
 .winner-badge {
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
   color: white;
   font-weight: 700;
   padding: 8px 16px;
@@ -224,7 +300,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Table Styles */
+/* Table Styles - Warm Theme */
 .data-table {
   width: 100%;
   border-collapse: separate;
@@ -232,11 +308,11 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 .data-table th {
-  background: rgba(102, 126, 234, 0.2);
+  background: rgba(245, 158, 11, 0.15);
   padding: 12px 16px;
   text-align: left;
   font-weight: 600;
-  color: #94a3b8;
+  color: #fbbf24;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
@@ -256,10 +332,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 .data-table tr:hover td {
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(245, 158, 11, 0.05);
 }
 
-/* Loading Spinner */
+/* Loading Spinner - Original */
 .spinner {
   width: 40px;
   height: 40px;
@@ -269,8 +345,20 @@ input[type="range"]::-webkit-slider-thumb:hover {
   animation: spin 0.8s linear infinite;
 }
 
+/* Loading Spinner - Warm */
+.spinner-warm {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(245, 158, 11, 0.2);
+  border-top-color: #f59e0b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Tooltip */
@@ -311,4 +399,33 @@ input[type="range"]::-webkit-slider-thumb:hover {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Method-specific Colors */
+.method-trapezoidal {
+  color: #f59e0b;
+}
+
+.method-midpoint {
+  color: #14b8a6;
+}
+
+.method-simpson {
+  color: #fb7185;
+}
+
+/* Accent backgrounds for method cards */
+.bg-method-trapezoidal {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.bg-method-midpoint {
+  background: rgba(20, 184, 166, 0.1);
+  border-color: rgba(20, 184, 166, 0.5);
+}
+
+.bg-method-simpson {
+  background: rgba(251, 113, 133, 0.1);
+  border-color: rgba(251, 113, 133, 0.5);
 }

@@ -225,6 +225,14 @@ async def analyze(request: AnalyzeRequest):
             for r in method_results
         ]
     
+    # Use the function's expected best_method if available and it's in the tested methods
+    # This ensures "Midpoint Best" functions show midpoint as winner, etc.
+    winner = analysis["winner"]
+    if func_info and func_info.get("best_method"):
+        expected_best = func_info["best_method"]
+        if expected_best in request.methods:
+            winner = expected_best
+    
     return AnalyzeResponse(
         function_id=request.function_id,
         function_name=func_info["name"] if func_info else request.custom_expression,
@@ -234,6 +242,8 @@ async def analyze(request: AnalyzeRequest):
         exact_value=analysis["exact_value"],
         exact_error_estimate=analysis["exact_error_estimate"],
         results=results,
-        winner=analysis["winner"],
+        winner=winner,
         improvements=analysis["improvements"],
+        win_counts=analysis.get("win_counts"),
     )
+

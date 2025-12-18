@@ -340,7 +340,7 @@ function App() {
               {activeTab === 'visualization' && (
                 <FunctionPlot
                   data={calculateData}
-                  method={selectedMethods[0]}
+                  method={analysisData?.winner || selectedMethods[0]}
                   n={n}
                 />
               )}

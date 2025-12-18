@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 /**
  * MethodControls - Sliders and toggles for integration methods
+ * Updated with custom N value input and vibrant colors
  */
 export default function MethodControls({
     n,
@@ -11,70 +12,126 @@ export default function MethodControls({
     onAnalyze,
     loading
 }) {
+    const [customN, setCustomN] = useState(n.toString());
+    const [showCustomInput, setShowCustomInput] = useState(false);
+
     const methods = [
         {
             id: 'trapezoidal',
             name: 'Trapezoidal',
             description: 'O(h²) convergence',
-            color: 'from-blue-500 to-cyan-500',
-            icon: '📐',
+            color: 'from-orange-500 to-amber-500',
+            activeColor: 'bg-gradient-to-r from-orange-500/20 to-amber-500/20 border-orange-400',
+            icon: '🔶',
         },
         {
             id: 'midpoint',
             name: 'Midpoint',
             description: 'O(h²) convergence',
-            color: 'from-green-500 to-emerald-500',
+            color: 'from-teal-500 to-cyan-500',
+            activeColor: 'bg-gradient-to-r from-teal-500/20 to-cyan-500/20 border-teal-400',
             icon: '⬜',
         },
         {
             id: 'simpson',
             name: "Simpson's",
             description: 'O(h⁴) convergence',
-            color: 'from-purple-500 to-pink-500',
+            color: 'from-rose-500 to-pink-500',
+            activeColor: 'bg-gradient-to-r from-rose-500/20 to-pink-500/20 border-rose-400',
             icon: '🎯',
         },
     ];
 
-    // N slider logarithmic values (powers of 2)
-    const nValues = [4, 8, 16, 32, 64, 128, 256, 512, 1024];
-    const nIndex = nValues.indexOf(n) !== -1 ? nValues.indexOf(n) : 4;
+    // Quick preset N values
+    const presetValues = [4, 8, 16, 32, 64, 128, 256, 512, 1024];
 
-    const handleSliderChange = (e) => {
-        const index = parseInt(e.target.value);
-        onNChange(nValues[index]);
+    const handleCustomNChange = (e) => {
+        const value = e.target.value;
+        setCustomN(value);
+
+        const num = parseInt(value);
+        if (!isNaN(num) && num >= 1 && num <= 1024) {
+            onNChange(num);
+        }
+    };
+
+    const handlePresetClick = (value) => {
+        setCustomN(value.toString());
+        onNChange(value);
+        setShowCustomInput(false);
+    };
+
+    const handleCustomNBlur = () => {
+        // Validate and clamp on blur
+        let num = parseInt(customN);
+        if (isNaN(num) || num < 1) num = 1;
+        if (num > 1024) num = 1024;
+        setCustomN(num.toString());
+        onNChange(num);
     };
 
     return (
         <div className="space-y-6 animate-fade-in">
-            {/* Number of Intervals Slider */}
+            {/* Number of Intervals */}
             <div className="glass-card p-5">
                 <label className="block text-sm font-medium text-slate-400 mb-4 uppercase tracking-wider">
                     Number of Intervals (N)
                 </label>
 
                 <div className="space-y-4">
+                    {/* Current Value Display */}
                     <div className="flex items-center justify-between">
-                        <span className="text-4xl font-bold gradient-text">{n}</span>
-                        <span className="text-sm text-slate-500">Step size: h = (b-a)/{n}</span>
+                        <div className="flex items-center gap-3">
+                            <span className="text-4xl font-bold gradient-text-warm">{n}</span>
+                            <button
+                                onClick={() => setShowCustomInput(!showCustomInput)}
+                                className="text-xs px-3 py-1 rounded-full bg-slate-700/50 text-slate-400 hover:bg-slate-600/50 hover:text-slate-300 transition-all"
+                            >
+                                {showCustomInput ? 'Use Presets' : 'Custom Value'}
+                            </button>
+                        </div>
+                        <span className="text-sm text-slate-500">h = (b-a)/{n}</span>
                     </div>
 
-                    <input
-                        type="range"
-                        min="0"
-                        max={nValues.length - 1}
-                        value={nIndex}
-                        onChange={handleSliderChange}
-                        className="w-full"
-                        disabled={loading}
-                    />
-
-                    <div className="flex justify-between text-xs text-slate-500">
-                        <span>4</span>
-                        <span>16</span>
-                        <span>64</span>
-                        <span>256</span>
-                        <span>1024</span>
-                    </div>
+                    {/* Custom Input Mode */}
+                    {showCustomInput ? (
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="1024"
+                                    value={customN}
+                                    onChange={handleCustomNChange}
+                                    onBlur={handleCustomNBlur}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleCustomNBlur()}
+                                    className="input-field w-full text-center text-2xl font-bold"
+                                    placeholder="Enter N (1-1024)"
+                                    disabled={loading}
+                                />
+                            </div>
+                            <p className="text-xs text-slate-500 text-center">
+                                Enter any value from 1 to 1024
+                            </p>
+                        </div>
+                    ) : (
+                        /* Preset Buttons Mode */
+                        <div className="grid grid-cols-3 gap-2">
+                            {presetValues.map((value) => (
+                                <button
+                                    key={value}
+                                    onClick={() => handlePresetClick(value)}
+                                    className={`py-2 px-3 rounded-lg text-sm font-medium transition-all ${n === value
+                                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-orange-500/30'
+                                            : 'bg-slate-700/50 text-slate-400 hover:bg-slate-600/50 hover:text-slate-300'
+                                        }`}
+                                    disabled={loading}
+                                >
+                                    {value}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -89,7 +146,7 @@ export default function MethodControls({
                         <button
                             key={method.id}
                             onClick={() => onMethodToggle(method.id)}
-                            className={`w-full method-card flex items-center gap-4 ${selectedMethods.includes(method.id) ? 'active' : ''
+                            className={`w-full method-card flex items-center gap-4 ${selectedMethods.includes(method.id) ? method.activeColor : ''
                                 }`}
                             disabled={loading}
                         >
@@ -101,8 +158,8 @@ export default function MethodControls({
                             </div>
 
                             <div className={`w-5 h-5 rounded-md border-2 transition-all duration-300 ${selectedMethods.includes(method.id)
-                                    ? `bg-gradient-to-r ${method.color} border-transparent`
-                                    : 'border-slate-600'
+                                ? `bg-gradient-to-r ${method.color} border-transparent`
+                                : 'border-slate-600'
                                 }`}>
                                 {selectedMethods.includes(method.id) && (
                                     <svg className="w-full h-full text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -119,12 +176,12 @@ export default function MethodControls({
             <button
                 onClick={onAnalyze}
                 disabled={loading || selectedMethods.length === 0}
-                className={`w-full btn-primary flex items-center justify-center gap-3 text-lg ${loading ? 'opacity-60' : ''
+                className={`w-full btn-primary-warm flex items-center justify-center gap-3 text-lg ${loading ? 'opacity-60' : ''
                     }`}
             >
                 {loading ? (
                     <>
-                        <div className="spinner !w-5 !h-5 !border-2"></div>
+                        <div className="spinner-warm !w-5 !h-5 !border-2"></div>
                         <span>Analyzing...</span>
                     </>
                 ) : (
@@ -137,3 +194,4 @@ export default function MethodControls({
         </div>
     );
 }
+

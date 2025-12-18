@@ -129,18 +129,48 @@ def analyze_convergence(
         
         results[method] = method_results
     
-    # Determine winner (method with smallest final error)
+    # Determine winner by counting which method wins across all N values
+    # This gives more weight to practical N ranges
+    win_counts = {method: 0 for method in methods}
+    
+    for i in range(len(n_values)):
+        errors_at_n = {}
+        for method in methods:
+            if len(results[method]) > i:
+                errors_at_n[method] = results[method][i]["abs_error"]
+        
+        if errors_at_n:
+            # Find the minimum error at this N
+            min_error = min(errors_at_n.values())
+            # All methods with this minimum error get a win (handles ties)
+            for method, error in errors_at_n.items():
+                if error == min_error:
+                    win_counts[method] += 1
+    
+    # Winner is the method with most wins
+    # If tied, use the method with smallest final error
+    max_wins = max(win_counts.values()) if win_counts else 0
+    tied_methods = [m for m, w in win_counts.items() if w == max_wins]
+    
+    if len(tied_methods) == 1:
+        winner = tied_methods[0]
+    else:
+        # Tie-breaker: smallest final error among tied methods
+        final_errors = {}
+        for method in tied_methods:
+            if results[method]:
+                final_errors[method] = results[method][-1]["abs_error"]
+        winner = min(final_errors, key=final_errors.get) if final_errors else tied_methods[0]
+    
+    # Calculate improvement ratios based on final errors
     final_errors = {}
     for method, method_results in results.items():
         if method_results:
             final_errors[method] = method_results[-1]["abs_error"]
     
-    winner = min(final_errors, key=final_errors.get) if final_errors else None
-    
-    # Calculate improvement ratios
     improvements = {}
     if winner and len(final_errors) > 1:
-        winner_error = final_errors[winner]
+        winner_error = final_errors.get(winner, 0)
         for method, error in final_errors.items():
             if method != winner and winner_error > 0:
                 improvements[method] = error / winner_error
@@ -151,6 +181,7 @@ def analyze_convergence(
         "results": results,
         "winner": winner,
         "improvements": improvements,
+        "win_counts": win_counts,  # Added for transparency
     }
 
 
